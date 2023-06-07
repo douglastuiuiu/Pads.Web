@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pads.Web</title>
+    </head>
+    <style>
+        body {
+            background-color: darkslategrey;
+            width: 100%;
+            margin: 0;
+            padding: 1%;
+        }
+        div {
+            width: 100%;
+            height: 33%;
+            margin: 0;
+            padding: 0;
+        }
+        button {
+            background-color: #8f8d3a;
+            width: 24%;
+            height: 250px;
+            margin: 0.1%;
+            padding: 0;
+            border-radius: 3%;
+            font-size: 600%;
+            cursor: pointer;
+        }
+        audio {
+            display: none;
+        }
+    </style>
+    <body onload="init()">
+        <div>
+            <button id="Ab">Ab</button>
+            <button id="A">A</button>
+            <button id="Bb">Bb</button>
+            <button id="B">B</button>
+        </div>
+        <div>
+            <button id="C">C</button>
+            <button id="Db">Db</button>
+            <button id="D">D</button>
+            <button id="Eb">Eb</button>
+        </div>
+        <div>
+            <button id="E">E</button>
+            <button id="F">F</button>
+            <button id="Gb">Gb</button>
+            <button id="G">G</button>
+        </div>
+
+        <audio id="Ab-audio" src="./pads/Ab.mp3">Ab</audio>
+        <audio id="A-audio" src="./pads/A.mp3">A</audio>
+        <audio id="Bb-audio" src="./pads/Bb.mp3">Bb</audio>
+        <audio id="B-audio" src="./pads/B.mp3">B</audio>
+        <audio id="C-audio" src="./pads/C.mp3">C</audio>
+        <audio id="Db-audio" src="./pads/Db.mp3">Db</audio>
+        <audio id="D-audio" src="./pads/D.mp3">D</audio>
+        <audio id="Eb-audio" src="./pads/Eb.mp3">Eb</audio>
+        <audio id="E-audio" src="./pads/E.mp3">E</audio>
+        <audio id="F-audio" src="./pads/F.mp3">F</audio>
+        <audio id="Gb-audio" src="./pads/Gb.mp3">Gb</audio>
+        <audio id="G-audio" src="./pads/G.mp3">G</audio>
+    </body>
+    <script type="text/javascript">
+        
+        const volumeInterval = 0.0175;
+
+        function playStop(btn) {
+            let audio = document.getElementById(btn.id+"-audio");
+            if (audio.paused && !audio.ended) {
+                play(audio, btn);
+            } else {
+                stop(audio, btn);
+            }
+        }
+
+        function play(audio, btn){
+            audio.volume = 0;
+            audio.play();
+            changeBackgroundButton(btn, "red");
+            var intervalPlay = setInterval(function(){
+                let newVolume = audio.volume+volumeInterval;
+                if(audio.volume < newVolume && newVolume < 1.0) {
+                    audio.volume = newVolume;    
+                } else {
+                    clearInterval(intervalPlay);
+                    audio.volume = 1;
+                }
+            }, 100);
+        }
+
+        function stop(audio, btn){
+            var intervalStop = setInterval(function(){
+                let newVolume = audio.volume-volumeInterval;
+                if(audio.volume != 0.0 && newVolume >= 0.0) {
+                    audio.volume = newVolume;    
+                } else {
+                    clearInterval(intervalStop);
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.volume = 0.0
+                    changeBackgroundButton(btn, "#8f8d3a");
+                }
+            }, 100);
+        }
+
+        function changeBackgroundButton(origin, color){
+            origin.style.backgroundColor = color;
+        }
+
+        function init(){
+            let buttons = document.getElementsByTagName("button");
+
+            for (const btnIndex in buttons) {
+                if (Object.hasOwnProperty.call(buttons, btnIndex)) {
+                    const btn = buttons[btnIndex];
+                    btn.addEventListener("click", function(){
+                        playStop(btn);
+                    });
+                }
+            }
+        }
+        
+    </script>
+</html>
