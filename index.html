@@ -92,6 +92,7 @@
         }
 
         function stop(audio, btn){
+            changeBackgroundButton(btn, "#8f8d3a");
             var intervalStop = setInterval(function(){
                 let newVolume = audio.volume-volumeInterval;
                 if(audio.volume != 0.0 && newVolume >= 0.0) {
@@ -101,7 +102,6 @@
                     audio.pause();
                     audio.currentTime = 0;
                     audio.volume = 0.0
-                    changeBackgroundButton(btn, "#8f8d3a");
                 }
             }, 100);
         }
